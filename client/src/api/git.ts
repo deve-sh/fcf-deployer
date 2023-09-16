@@ -15,7 +15,7 @@ export const switchBranch = async (branchName: string) => {
 		method: "post",
 		body: { branchName },
 	});
-	return data?.success || false;
+	return data?.successful || false;
 };
 
 export const getActiveBranch = async () => {

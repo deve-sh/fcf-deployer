@@ -21,7 +21,7 @@
 	let isInGitRepo: boolean;
 	let gitBranches: string[] = [];
 	let cloudFunctions: CloudFunction[] = [];
-	let activeBranch: string | null;
+	let activeBranch: string | null = null;
 	let environments: string[] = [];
 	let deploymentEnvironment: string = "";
 	let selectedFunctionsForDeployment = new Set();
@@ -47,10 +47,19 @@
 	};
 
 	// React to active branch value change from user selection.
-	// WTF is this syntax Svelte?
+	// WTF is this syntax Svelte? - Also how would you handle for errors in case the branch switch call from the backend fails and set the select dropdown back to the correct value.
 	$: activeBranch,
-		(() => {
-			if (activeBranch) switchBranch(activeBranch);
+		(async () => {
+			if (activeBranch) {
+				const successfulChange = await switchBranch(activeBranch);
+				if (!successfulChange) {
+					return window.alert(
+						"Branch change was not successful. Check if you have any staged/un-committed files. Please set the branch dropdown to the correct option."
+					);
+				}
+				// Refetch cloud functions for branch just switched to
+				cloudFunctions = await listCloudFunctions();
+			}
 		})();
 </script>
 
@@ -120,6 +129,9 @@
 			<div style="text-align: center">No Cloud Functions found.</div>
 		{/if}
 	</div>
+	{#if selectedFunctionsForDeployment.size > 0}
+		<div id="floating-create-deployment-indicator" />
+	{/if}
 </Paper>
 
 <style type="text/css" global>
