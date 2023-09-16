@@ -48,14 +48,9 @@ functionsRouter.get("/start-deployment", async (req, res) => {
 	}
 });
 
-functionsRouter.get("/listen-to-deployment-state", async (req, res) => {
+functionsRouter.get("/listen-to-deployment-state/:jobId", async (req, res) => {
 	try {
-		const { jobId } = req.body as { jobId: string };
-
-		if (!jobId) return res.status(400).json({ error: "No jobId received" });
-		const individualDeploymentStore = deploymentJobs.get(jobId);
-		if (!individualDeploymentStore)
-			return res.status(404).json({ error: "Job not found" });
+		const { jobId } = req.params;
 
 		// Server sent events
 		const headers = {
@@ -64,6 +59,13 @@ functionsRouter.get("/listen-to-deployment-state", async (req, res) => {
 			"Cache-Control": "no-cache",
 		};
 		res.writeHead(200, headers);
+
+		const individualDeploymentState = deploymentJobs.get(jobId);
+		if (!individualDeploymentState) {
+			const message = `data: ${JSON.stringify({ error: "Job not found" })}\n\n`;
+			res.write(message);
+			return res.end();
+		}
 
 		let logsSentTillNow = 0;
 		const sendStoreStateToClient = (store: IndividualDeploymentState) => {
@@ -75,11 +77,11 @@ functionsRouter.get("/listen-to-deployment-state", async (req, res) => {
 			logsSentTillNow = store.logs.length - 1;
 			res.write(message);
 		};
-		if (individualDeploymentStore.logs.length)
+		if (individualDeploymentState.logs.length)
 			// If there are already logs stored and this is a new tab opened from the client to see the job information.
-			sendStoreStateToClient(individualDeploymentStore);
+			sendStoreStateToClient(individualDeploymentState);
 
-		const unsubscribeFromDeploymentLogs = individualDeploymentStore.onChange(
+		const unsubscribeFromDeploymentLogs = individualDeploymentState.onChange(
 			(storeState) => {
 				sendStoreStateToClient(storeState);
 				if (
@@ -87,20 +89,15 @@ functionsRouter.get("/listen-to-deployment-state", async (req, res) => {
 					storeState.status === "errorred"
 				)
 					unsubscribeFromDeploymentLogs();
-				res.emit("close");
 			}
 		);
 
 		req.on("close", () => {
-			res.emit("close");
-			if (!res.headersSent) res.end();
 			if (unsubscribeFromDeploymentLogs) unsubscribeFromDeploymentLogs();
+			if (!res.headersSent) res.end();
 		});
 	} catch (error) {
-		if (!res.headersSent)
-			return res
-				.status(500)
-				.json({ error: "Something went wrong.", detailed: error });
+		if (!res.headersSent) return res.end();
 	}
 });
 
