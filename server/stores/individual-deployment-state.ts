@@ -3,9 +3,9 @@ import { spawn, execSync } from "node:child_process";
 type ChangeListener = (deploymentState: IndividualDeploymentState) => unknown;
 
 class IndividualDeploymentState {
-	id: string;
-	functionsList: string[];
-	logs: string[];
+	id: string = '';
+	functionsList: string[] = [];
+	logs: string[] = [];
 	status: "ongoing" | "completed" | "errorred";
 	environment: string | null;
 
@@ -41,6 +41,7 @@ class IndividualDeploymentState {
 	private addToLogs = (data: string) => {
 		const logString = data.toString().trim();
 		if (logString.length) {
+			console.log(logString);
 			this.logs.push(logString);
 			this.notifyListeners();
 		}
@@ -58,6 +59,7 @@ class IndividualDeploymentState {
 		deploymentSpawnedProcess.stdout.on("data", this.addToLogs);
 		deploymentSpawnedProcess.stderr.on("data", this.addToLogs);
 		deploymentSpawnedProcess.on("close", (code, signal) => {
+			console.log("Deployment job ", this.id, "finished with code: ", code);
 			if (code || signal) this.setStatus("errorred");
 			else this.setStatus("completed");
 		});
