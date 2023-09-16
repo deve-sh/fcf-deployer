@@ -1,6 +1,7 @@
 export type CloudFunction = {
 	name: string;
 	triggerType: string;
+	minInstances: number | string;
 	maxInstances: number | string;
 	timeout: number | string;
 	availableMemoryMb: number | string;
