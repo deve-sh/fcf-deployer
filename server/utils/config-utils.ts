@@ -3,8 +3,11 @@ import fs from "node:fs";
 import minimist from "minimist";
 
 import DEFAULT_CONFIGS from "../constants/configs.default";
-export type Configs = { port: number } & { functionsEntrypoint: string } & {
+export type Configs = { port: number } & {
+	functionsEntrypoint: string;
 	prerunScript: string;
+	firebasercFile: string;
+	firebaseJSONFile: string;
 };
 
 export const getCommandLineArgs = () => {
@@ -42,4 +45,42 @@ export const getConfigFromBothCommandLineAndConfigFile = (): Configs => {
 	}
 
 	return finalConfig satisfies Configs;
+};
+
+// Mainly for typescript Firebase projects
+export const getFirebaseFunctionsBuildCommand = (
+	firebaseJSONFilePath: string
+) => {
+	if (!fs.existsSync(firebaseJSONFilePath)) return null;
+	try {
+		const firebaseJSON = JSON.parse(
+			fs.readFileSync(firebaseJSONFilePath, "utf-8")
+		);
+		if (
+			firebaseJSON &&
+			firebaseJSON.functions &&
+			firebaseJSON.functions.predeploy
+		)
+			return firebaseJSON.functions.predeploy;
+
+		return null;
+	} catch (error) {
+		console.warn("There is a problem with your firebase.json file", error);
+		return null;
+	}
+};
+
+export const getListOfFirebaseProjects = (firebaseRCFilePath: string) => {
+	if (!fs.existsSync(firebaseRCFilePath)) return ["default"];
+	try {
+		const firebaseRCJSON = JSON.parse(
+			fs.readFileSync(firebaseRCFilePath, "utf-8")
+		);
+		if (firebaseRCJSON && firebaseRCJSON.projects)
+			return Object.keys(firebaseRCJSON.projects);
+		return ["default"];
+	} catch (error) {
+		console.warn("There is a problem with your firebase.json file", error);
+		return ["default"];
+	}
 };

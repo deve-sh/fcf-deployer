@@ -5,6 +5,12 @@ const DEFAULT_CONFIGS = {
 	functionsEntrypoint: {
 		defaultValue: path.resolve(process.cwd(), "./functions.js"),
 	},
+	firebasercFile: {
+		defaultValue: path.resolve(process.cwd(), "../.firebaserc"),
+	},
+	firebaseJSONFile: {
+		defaultValue: path.resolve(process.cwd(), "../firebase.json"),
+	},
 	prerunScript: { defaultValue: "" },
 } as const;
 
