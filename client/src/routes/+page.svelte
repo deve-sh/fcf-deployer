@@ -88,7 +88,7 @@
 					{#each cloudFunctions as func}
 						<Row style="text-align: center">
 							<Cell>
-								<Checkbox
+								<checkbox
 									checked={selectedFunctionsForDeployment.has(func.name)}
 									on:change={() => toggleCloudFunctionForDeployment(func.name)}
 								/>
