@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import express from "express";
 import { getPort } from "get-port-please";
 import { execSync } from "node:child_process";
