@@ -2,6 +2,8 @@
 	import type { CloudFunction } from "../types/cloud-function";
 
 	import { onMount } from "svelte";
+	import { goto } from "$app/navigation";
+
 	import {
 		getActiveBranch,
 		isInGitRepository,
@@ -9,6 +11,7 @@
 		switchBranch,
 	} from "../api/git";
 	import {
+		createDeployment,
 		listCloudFunctionEnvironments,
 		listCloudFunctions,
 	} from "../api/functions";
@@ -24,7 +27,7 @@
 	let activeBranch: string | null = null;
 	let environments: string[] = [];
 	let deploymentEnvironment: string = "";
-	let selectedFunctionsForDeployment = new Set();
+	let selectedFunctionsForDeployment: Set<string> = new Set();
 
 	onMount(async () => {
 		[isInGitRepo, cloudFunctions, environments] = await Promise.all([
@@ -41,13 +44,17 @@
 	});
 
 	const toggleCloudFunctionForDeployment = (name: string) => {
-		if (selectedFunctionsForDeployment.has(name))
+		if (selectedFunctionsForDeployment.has(name)) {
 			selectedFunctionsForDeployment.delete(name);
-		else selectedFunctionsForDeployment.add(name);
+			// Things you have to do for reactivity in Svelte
+			selectedFunctionsForDeployment = selectedFunctionsForDeployment;
+		} else {
+			selectedFunctionsForDeployment = selectedFunctionsForDeployment.add(name);
+		}
 	};
 
 	// React to active branch value change from user selection.
-	// WTF is this syntax Svelte? - Also how would you handle for errors in case the branch switch call from the backend fails and set the select dropdown back to the correct value.
+	// WTF is this syntax Svelte? - Also how would you handle for errors in case the branch switch call from the backend fails and set the select dropdown back to the correct value?!
 	$: activeBranch,
 		(async () => {
 			if (activeBranch) {
@@ -61,6 +68,22 @@
 				cloudFunctions = await listCloudFunctions();
 			}
 		})();
+
+	const startDeployment = async () => {
+		if (
+			!confirm(
+				"Are you sure? This will start a deployment operation for your Cloud Functions immediately."
+			)
+		)
+			return;
+
+		const jobId = await createDeployment(
+			Array.from(selectedFunctionsForDeployment),
+			deploymentEnvironment || null
+		);
+		if (!jobId) return window.alert("Something went wrong.");
+		return goto(`/deploy-job/${jobId}`);
+	};
 </script>
 
 <Paper
@@ -130,7 +153,16 @@
 		{/if}
 	</div>
 	{#if selectedFunctionsForDeployment.size > 0}
-		<div id="floating-create-deployment-indicator" />
+		<div
+			id="floating-create-deployment-indicator"
+			aria-label="Create Deployment"
+			role="button"
+			on:click={startDeployment}
+			tabindex="-1"
+			on:keyup={() => null}
+		>
+			LET'S GO
+		</div>
 	{/if}
 </Paper>
 
@@ -154,5 +186,17 @@
 		letter-spacing: -0.0083333333rem;
 		text-decoration: inherit;
 		text-transform: inherit;
+	}
+
+	#floating-create-deployment-indicator {
+		position: fixed;
+		bottom: 2rem;
+		right: 2rem;
+		height: 1.5rem;
+		padding: 1rem 2rem;
+		border-radius: 7rem;
+		background: #0bb898;
+		color: #ffffff;
+		cursor: pointer;
 	}
 </style>

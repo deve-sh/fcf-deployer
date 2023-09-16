@@ -17,7 +17,7 @@ functionsRouter.get("/list", async (_, res) => {
 	}
 });
 
-functionsRouter.get("/start-deployment", async (req, res) => {
+functionsRouter.post("/start-deployment", async (req, res) => {
 	try {
 		const { functionsList, environment = null } = req.body as {
 			functionsList: string[];
