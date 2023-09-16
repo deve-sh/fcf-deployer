@@ -72,16 +72,16 @@ export const getFirebaseFunctionsBuildCommand = (
 };
 
 export const getListOfFirebaseProjects = (firebaseRCFilePath: string) => {
-	if (!fs.existsSync(firebaseRCFilePath)) return ["default"];
+	if (!fs.existsSync(firebaseRCFilePath)) return [];
 	try {
 		const firebaseRCJSON = JSON.parse(
 			fs.readFileSync(firebaseRCFilePath, "utf-8")
 		);
 		if (firebaseRCJSON && firebaseRCJSON.projects)
 			return Object.keys(firebaseRCJSON.projects);
-		return ["default"];
+		return [];
 	} catch (error) {
 		console.warn("There is a problem with your firebase.json file", error);
-		return ["default"];
+		return [];
 	}
 };
