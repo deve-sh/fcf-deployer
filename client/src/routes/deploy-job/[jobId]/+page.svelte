@@ -50,7 +50,14 @@
 		<b>Deployment ID</b>: {data.params.jobId}
 	</div>
 	<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
-		<b>Status</b>: <Chip chip={status}>
+		<b>Status</b>: <Chip
+			style={status.includes("Error")
+				? "background: red; color:white;"
+				: status.includes("Ongoing")
+				? "background: yellow; color: white;"
+				: "background: green; color:white;"}
+			chip={status}
+		>
 			<ChipText>{status}</ChipText>
 		</Chip>
 	</div>
