@@ -30,6 +30,7 @@ export const parseConfigFile = () => {
 			return {};
 		}
 	}
+	return {}
 };
 
 export const getConfigFromBothCommandLineAndConfigFile = (): Configs => {
