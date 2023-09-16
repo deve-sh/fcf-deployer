@@ -74,12 +74,12 @@ functionsRouter.get("/listen-to-deployment-state/:jobId", async (req, res) => {
 				functionsList: !logsSentTillNow ? store.functionsList : [],
 				logs: store.logs.slice(logsSentTillNow),
 			})}\n\n`;
-			logsSentTillNow = store.logs.length - 1;
+			logsSentTillNow = Math.max(store.logs.length - 1, 0);
 			res.write(message);
 		};
-		if (individualDeploymentState.logs.length)
-			// If there are already logs stored and this is a new tab opened from the client to see the job information.
-			sendStoreStateToClient(individualDeploymentState);
+
+		// Initial data sent
+		sendStoreStateToClient(individualDeploymentState);
 
 		const unsubscribeFromDeploymentLogs = individualDeploymentState.onChange(
 			(storeState) => {
