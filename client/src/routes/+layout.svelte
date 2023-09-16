@@ -16,9 +16,12 @@
 		line-height: 1.61;
 		font-family: "Roboto", sans-serif;
 		background: #f6f7f9;
+		min-height: 100vh;
+		width: 100vw;
+		overflow-x: hidden;
 	}
 
-	:global(*) {
+	* {
 		box-sizing: border-box;
 	}
 </style>

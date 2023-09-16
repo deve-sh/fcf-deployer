@@ -2,7 +2,12 @@
 	import type { CloudFunction } from "../types/cloud-function";
 
 	import { onMount } from "svelte";
-	import { getActiveBranch, isInGitRepository, listBranches } from "../api/git";
+	import {
+		getActiveBranch,
+		isInGitRepository,
+		listBranches,
+		switchBranch,
+	} from "../api/git";
 	import {
 		listCloudFunctionEnvironments,
 		listCloudFunctions,
@@ -40,6 +45,13 @@
 			selectedFunctionsForDeployment.delete(name);
 		else selectedFunctionsForDeployment.add(name);
 	};
+
+	// React to active branch value change from user selection.
+	// WTF is this syntax Svelte?
+	$: activeBranch,
+		(() => {
+			if (activeBranch) switchBranch(activeBranch);
+		})();
 </script>
 
 <Paper
@@ -76,7 +88,7 @@
 			<DataTable stickyHeader style="width:100%;">
 				<Head>
 					<Row>
-						<Cell />
+						<Cell>Deploy?</Cell>
 						<Cell>Function</Cell>
 						<Cell>Regions</Cell>
 						<Cell>Trigger</Cell>
@@ -88,7 +100,7 @@
 					{#each cloudFunctions as func}
 						<Row style="text-align: center">
 							<Cell>
-								<checkbox
+								<Checkbox
 									checked={selectedFunctionsForDeployment.has(func.name)}
 									on:change={() => toggleCloudFunctionForDeployment(func.name)}
 								/>
@@ -122,28 +134,13 @@
 	}
 
 	:is(.mdc-typography--headline2) {
-		-moz-osx-font-smoothing: grayscale;
-		-webkit-font-smoothing: antialiased;
 		font-family: Roboto, sans-serif;
 		margin-bottom: 1.5rem;
-		font-family: var(
-			--mdc-typography-headline2-font-family,
-			var(--mdc-typography-font-family, Roboto, sans-serif)
-		);
 		font-size: 1.875rem;
-		font-size: var(--mdc-typography-headline2-font-size, 1.875rem);
 		line-height: 1.875rem;
-		line-height: var(--mdc-typography-headline2-line-height, 1.875rem);
 		font-weight: 300;
-		font-weight: var(--mdc-typography-headline2-font-weight, 300);
-		letter-spacing: -0.0083333333em;
-		letter-spacing: var(
-			--mdc-typography-headline2-letter-spacing,
-			-0.0083333333em
-		);
+		letter-spacing: -0.0083333333rem;
 		text-decoration: inherit;
-		text-decoration: var(--mdc-typography-headline2-text-decoration, inherit);
 		text-transform: inherit;
-		text-transform: var(--mdc-typography-headline2-text-transform, inherit);
 	}
 </style>
