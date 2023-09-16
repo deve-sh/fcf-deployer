@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { v4 as uuid } from "uuid";
 import { listFunctions } from "../utils/functions";
+import configStore from "../stores/config-store";
 
 import IndividualDeploymentState from "../stores/individual-deployment-state";
 
@@ -18,7 +19,10 @@ functionsRouter.get("/list", async (_, res) => {
 
 functionsRouter.get("/start-deployment", async (req, res) => {
 	try {
-		const { functionsList } = req.body as { functionsList: string[] };
+		const { functionsList, environment = null } = req.body as {
+			functionsList: string[];
+			environment: string | null;
+		};
 		if (
 			!functionsList ||
 			!Array.isArray(functionsList) ||
@@ -31,7 +35,11 @@ functionsRouter.get("/start-deployment", async (req, res) => {
 		const newDeploymentJobId = uuid();
 		deploymentJobs.set(
 			newDeploymentJobId,
-			new IndividualDeploymentState(newDeploymentJobId, functionsList)
+			new IndividualDeploymentState(
+				newDeploymentJobId,
+				functionsList,
+				environment
+			)
 		);
 
 		res.status(201).json({ jobId: newDeploymentJobId });
@@ -94,6 +102,10 @@ functionsRouter.get("/listen-to-deployment-state", async (req, res) => {
 				.status(500)
 				.json({ error: "Something went wrong.", detailed: error });
 	}
+});
+
+functionsRouter.get("/environments", async (_, res) => {
+	res.json({ environments: configStore.firebaseProjectsList });
 });
 
 export default functionsRouter;

@@ -3,6 +3,7 @@
 import express from "express";
 import { getPort } from "get-port-please";
 import { execSync } from "node:child_process";
+import cors from 'cors';
 
 // Initialize all configs for the app from command line args as well as config file
 import configStore from "./stores/config-store";
@@ -22,9 +23,13 @@ if (configStore.firebaseFunctionsBuildCommand) {
 	execSync(configStore.firebaseFunctionsBuildCommand);
 }
 
+// TODO: Add linting/pre-commit hook for this line to be unchanged
+const enableCors = true;	// Turn on while in development
+
 // Now start the server
 const server = express();
 
+if(enableCors) server.use(cors());
 server.use(express.json());
 
 server.use("/git", gitRouter);

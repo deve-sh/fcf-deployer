@@ -17,6 +17,15 @@ export const getGitBranches = (): Promise<string[]> =>
 		})
 	);
 
+export const getActiveBranch = (): Promise<string | null> =>
+	new Promise((resolve) =>
+		exec("git branch --show-current", (error, stdout) => {
+			const branch = stdout.trim();
+			if (error) return resolve(null);
+			return resolve(branch);
+		})
+	);
+
 export const switchGitBranch = (
 	branchName: string
 ): Promise<{ error: Error | unknown }> =>

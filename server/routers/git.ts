@@ -1,11 +1,24 @@
 import { Router } from "express";
-import { getGitBranches, isGitRepo, switchGitBranch } from "../utils/git";
+import {
+	getActiveBranch,
+	getGitBranches,
+	isGitRepo,
+	switchGitBranch,
+} from "../utils/git";
 
 const gitRouter = Router();
 
 gitRouter.get("/list-branches", async (_, res) => {
 	try {
 		res.json({ branches: await getGitBranches() });
+	} catch (error) {
+		res.status(500).json({ error: "Something went wrong.", detailed: error });
+	}
+});
+
+gitRouter.get("/active-branch", async (_, res) => {
+	try {
+		res.json({ branch: await getActiveBranch() });
 	} catch (error) {
 		res.status(500).json({ error: "Something went wrong.", detailed: error });
 	}

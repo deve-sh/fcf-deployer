@@ -1,4 +1,4 @@
-import { spawn } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 
 type ChangeListener = (deploymentState: IndividualDeploymentState) => unknown;
 
@@ -7,13 +7,19 @@ class IndividualDeploymentState {
 	functionsList: string[];
 	logs: string[];
 	status: "ongoing" | "completed" | "errorred";
+	environment: string | null;
 
 	private changeListeners: Set<ChangeListener> = new Set();
 
-	constructor(id: string, functionsList: string[]) {
+	constructor(
+		id: string,
+		functionsList: string[],
+		environment: string | null = null
+	) {
 		this.status = "ongoing";
 		this.id = id;
 		this.functionsList = functionsList;
+		this.environment = environment;
 		this.startDeployment();
 	}
 
@@ -41,6 +47,9 @@ class IndividualDeploymentState {
 	};
 
 	private startDeployment = () => {
+		if (this.environment)
+			execSync(`firebase use ${this.environment}`, { stdio: "inherit" });
+
 		const deploymentCommand = `firebase deploy --only ${this.functionsList
 			.map((func) => `functions:${func}`)
 			.join(",")}`;
