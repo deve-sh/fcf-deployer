@@ -35,6 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"ansi-to-html": "^0.7.2",
 		"axios": "^1.5.0"
 	}
 }

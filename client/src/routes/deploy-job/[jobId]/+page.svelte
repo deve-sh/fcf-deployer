@@ -2,6 +2,10 @@
 	import { onMount } from "svelte";
 	import { goto } from "$app/navigation";
 
+	// For converting console colour codes to html for users to preview them.
+	import ANSIToHTMLConverter from "ansi-to-html";
+	const colourCodeConverter = new ANSIToHTMLConverter();
+
 	export let data;
 	import { getRequestURL } from "../../../api/utils.js";
 
@@ -28,7 +32,10 @@
 			} else {
 				functionsList = data.functionsList || [];
 				status = data.status.toUpperCase().slice(0, 1) + data.status.slice(1);
-				logs = [...logs, data.logs];
+				logs = [
+					...logs,
+					...data.logs.map((log: string) => colourCodeConverter.toHtml(log)),
+				];
 			}
 		};
 	});
@@ -55,7 +62,7 @@
 			<Head><Row><Cell>Log</Cell></Row></Head>
 			<Body>
 				{#each logs as log}
-					<Row><Cell>{log}</Cell></Row>
+					<Row><Cell>{@html log}</Cell></Row>
 				{/each}
 			</Body>
 		</DataTable>
