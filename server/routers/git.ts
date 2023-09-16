@@ -28,7 +28,8 @@ gitRouter.post("/switch-branch", async (req, res) => {
 	try {
 		if (!req.body.branchName)
 			return res.status(400).json({ error: "Branch name not specified" });
-		res.json({ successful: await switchGitBranch(req.body.branchName) });
+		const { error } = await switchGitBranch(req.body.branchName);
+		res.json({ successful: !error, error });
 	} catch (error) {
 		res.status(500).json({ error: "Something went wrong.", detailed: error });
 	}
