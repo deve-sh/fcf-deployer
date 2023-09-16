@@ -63,8 +63,7 @@ functionsRouter.get("/listen-to-deployment-state/:jobId", async (req, res) => {
 		const individualDeploymentState = deploymentJobs.get(jobId);
 		if (!individualDeploymentState) {
 			const message = `data: ${JSON.stringify({ error: "Job not found" })}\n\n`;
-			res.write(message);
-			return res.end();
+			return res.write(message);
 		}
 
 		let logsSentTillNow = 0;
@@ -94,7 +93,7 @@ functionsRouter.get("/listen-to-deployment-state/:jobId", async (req, res) => {
 
 		req.on("close", () => {
 			if (unsubscribeFromDeploymentLogs) unsubscribeFromDeploymentLogs();
-			if (!res.headersSent) res.end();
+			// if (!res.headersSent) res.end();
 		});
 	} catch (error) {
 		if (!res.headersSent) return res.end();
