@@ -1,0 +1,19 @@
+{
+	"name": "cloud-functions-deployer-gui",
+	"version": "1.0.0",
+	"description": "A GUI to help you deploy your Firebase cloud functions",
+	"scripts": {
+		"dev:backend": "tsup --watch --onSuccess \"node dist/server.js\""
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.18.2",
+		"get-port-please": "^3.1.1"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.17",
+		"tsup": "^7.2.0"
+	}
+}
