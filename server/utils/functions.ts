@@ -1,11 +1,8 @@
-import path from "node:path";
+import configStore from "../stores/config-store";
 
-const defaultFunctionFileName = path.resolve(process.cwd(), "./functions.js");
-
-export const listFunctions = (
-	functionsEntryPointFileName: string = defaultFunctionFileName
-) => {
-	const allFunctions = require(functionsEntryPointFileName);
+export const listFunctions = () => {
+	const functionExportsEntryPointPath = configStore.configs.functionsEntrypoint;
+	const allFunctions = require(functionExportsEntryPointPath);
 	const functions: {
 		name: string;
 		triggerType: string;
