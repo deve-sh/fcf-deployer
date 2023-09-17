@@ -19,7 +19,6 @@
 	import Paper from "@smui/paper";
 	import Select, { Option } from "@smui/select";
 	import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
-	import Tooltip, { Wrapper as TooltipWrapper } from "@smui/tooltip";
 	import Checkbox from "@smui/checkbox";
 
 	let isInGitRepo: boolean;
@@ -154,12 +153,7 @@
 								>{func.availableMemoryMb}
 								{func.availableMemoryMb !== "-" ? "MB" : ""}
 							</Cell>
-							<TooltipWrapper>
-								<Cell>
-									<Tooltip>{func.eventTrigger?.resource}</Tooltip>
-									<div>{func.triggerType}</div></Cell
-								>
-							</TooltipWrapper>
+							<Cell>{func.triggerType}</Cell>
 							<Cell>{func.minInstances}/{func.maxInstances}</Cell>
 							<Cell>{func.timeout}</Cell>
 						</Row>
