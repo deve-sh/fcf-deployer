@@ -19,13 +19,9 @@ if (configStore.configs.prerunScript) {
 
 if (configStore.firebaseFunctionsBuildCommand) {
 	console.log(
-		"Running firebase functions build command (You probably have typescript in your project)"
+		"Running firebase functions build command (You probably have typescript in your project which needs to be compiled first)"
 	);
-	if (Array.isArray(typeof configStore.firebaseFunctionsBuildCommand))
-		for (const command of configStore.firebaseFunctionsBuildCommand)
-			execSync(command, { stdio: "inherit" });
-	else
-		execSync(configStore.firebaseFunctionsBuildCommand, { stdio: "inherit" });
+	execSync(configStore.firebaseFunctionsBuildCommand, { stdio: "inherit" });
 }
 
 // TODO: Add linting/pre-commit hook for this line to be unchanged

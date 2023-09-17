@@ -7,7 +7,6 @@ export type Configs = { port: number } & {
 	functionsEntrypoint: string;
 	prerunScript: string;
 	firebasercFile: string;
-	firebaseJSONFile: string;
 };
 
 export const getCommandLineArgs = () => {
@@ -30,7 +29,7 @@ export const parseConfigFile = () => {
 			return {};
 		}
 	}
-	return {}
+	return {};
 };
 
 export const getConfigFromBothCommandLineAndConfigFile = (): Configs => {
@@ -49,24 +48,16 @@ export const getConfigFromBothCommandLineAndConfigFile = (): Configs => {
 };
 
 // Mainly for typescript Firebase projects
-export const getFirebaseFunctionsBuildCommand = (
-	firebaseJSONFilePath: string
-) => {
-	if (!fs.existsSync(firebaseJSONFilePath)) return null;
+export const getFirebaseFunctionsBuildCommand = () => {
+	const packageJSONFile = path.resolve(process.cwd(), "./package.json");
+	if (!fs.existsSync(packageJSONFile)) return null;
 	try {
-		const firebaseJSON = JSON.parse(
-			fs.readFileSync(firebaseJSONFilePath, "utf-8")
-		);
-		if (
-			firebaseJSON &&
-			firebaseJSON.functions &&
-			firebaseJSON.functions.predeploy
-		)
-			return firebaseJSON.functions.predeploy;
-
+		const packageJSON = JSON.parse(fs.readFileSync(packageJSONFile, "utf-8"));
+		if (packageJSON && packageJSON.scripts && packageJSON.scripts.build)
+			return packageJSON.functions.build;
 		return null;
 	} catch (error) {
-		console.warn("There is a problem with your firebase.json file", error);
+		console.warn("There is a problem with your package.json file", error);
 		return null;
 	}
 };
