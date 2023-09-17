@@ -16,7 +16,7 @@ npx open-functions-deployer
 
 And open the URL that is shown in the terminal after running this command.
 
-![GUI View](./docs/images/deployer-list-view.png)
+![GUI View](https://raw.githubusercontent.com/deve-sh/fcf-deployer/main/docs/images/deployer-list-view.png)
 
 ## What it can do
 
@@ -24,7 +24,7 @@ And open the URL that is shown in the terminal after running this command.
 - Change Git branches from the UI to seamlessly run point-in-time Cloud Function deployments.
 - Deploy Cloud Functions for a specific environment/project (Useful for people running multiple Firebase Cloud Functions from a single codebase - For use cases such as staging and production).
 
-![Logs View](./docs/images/Logs%20View.PNG)
+![Logs View](https://raw.githubusercontent.com/deve-sh/fcf-deployer/main/docs/images/Logs%20View.PNG)
 
 ## Possible Configs
 
