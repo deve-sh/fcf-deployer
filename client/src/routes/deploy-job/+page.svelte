@@ -6,8 +6,7 @@
 	import ANSIToHTMLConverter from "ansi-to-html";
 	const colourCodeConverter = new ANSIToHTMLConverter();
 
-	export let data;
-	import { getRequestURL } from "../../../api/utils.js";
+	import { getRequestURL } from "../../api/utils.js";
 
 	import Paper from "@smui/paper";
 	import Chip, { Text as ChipText } from "@smui/chips";
@@ -16,9 +15,11 @@
 	let functionsList: string[] = [];
 	let status: string = "Ongoing";
 
-	const jobId = data.params.jobId;
+	const jobId = new URLSearchParams(window.location.search).get("jobId");
 
 	onMount(() => {
+		if (!jobId) return goto("/");
+
 		const eventSource = new EventSource(
 			getRequestURL(`/functions/listen-to-deployment-state/${jobId}`)
 		);
@@ -46,7 +47,7 @@
 	class="deployer-page"
 >
 	<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
-		<b>Deployment ID</b>: {data.params.jobId}
+		<b>Deployment ID</b>: {jobId}
 	</div>
 	<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
 		<b>Status</b>: <Chip

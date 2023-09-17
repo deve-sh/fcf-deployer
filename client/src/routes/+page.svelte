@@ -88,7 +88,7 @@
 			deploymentEnvironment || null
 		);
 		if (!jobId) return window.alert("Something went wrong.");
-		return goto(`/deploy-job/${jobId}`);
+		return goto(`/deploy-job?jobId=${jobId}`);
 	};
 </script>
 

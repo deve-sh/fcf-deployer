@@ -6,8 +6,10 @@
 		"dev:client": "cd ./client && npm run dev",
 		"dev:server": "tsup --watch --onSuccess \"node dist/server.js\"",
 		"compile:server": "tsup",
+		"compile:client": "cd ./client && npm run build",
 		"pre-publish": "npm run compile:server && node scripts/pre-publish",
-		"publish-as-package": "npm run pre-publish && cd ./dist && npm publish"
+		"publish-as-package": "npm run pre-publish && cd ./dist && npm publish",
+		"build": "npm run compile:server && npm run compile:client"
 	},
 	"author": "Devesh Kumar",
 	"keywords": [
