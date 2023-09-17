@@ -19,6 +19,7 @@
 	import Paper from "@smui/paper";
 	import Select, { Option } from "@smui/select";
 	import DataTable, { Head, Body, Row, Cell } from "@smui/data-table";
+	import Tooltip, { Wrapper as TooltipWrapper } from "@smui/tooltip";
 	import Checkbox from "@smui/checkbox";
 
 	let isInGitRepo: boolean;
@@ -87,7 +88,7 @@
 			deploymentEnvironment || null
 		);
 		if (!jobId) return window.alert("Something went wrong.");
-		return goto(`/deploy-job?jobId=${jobId}`);
+		return goto(`/deploy-job/${jobId}`);
 	};
 </script>
 
@@ -153,7 +154,12 @@
 								>{func.availableMemoryMb}
 								{func.availableMemoryMb !== "-" ? "MB" : ""}
 							</Cell>
-							<Cell>{func.triggerType}</Cell>
+							<TooltipWrapper>
+								<Cell>
+									<Tooltip>{func.eventTrigger?.resource}</Tooltip>
+									<div>{func.triggerType}</div></Cell
+								>
+							</TooltipWrapper>
 							<Cell>{func.minInstances}/{func.maxInstances}</Cell>
 							<Cell>{func.timeout}</Cell>
 						</Row>
@@ -202,12 +208,12 @@
 
 	#floating-create-deployment-indicator {
 		position: fixed;
-		bottom: 2rem;
-		right: 2rem;
+		bottom: 3rem;
+		right: 4rem;
 		height: 1.5rem;
 		padding: 1rem 2rem;
 		border-radius: 7rem;
-		background: #0bb898;
+		background: #097bc2;
 		color: #ffffff;
 		cursor: pointer;
 	}

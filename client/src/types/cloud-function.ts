@@ -6,7 +6,7 @@ export type CloudFunction = {
 	timeout: number | string;
 	availableMemoryMb: number | string;
 	regions: string[];
-	eventTrigger: unknown | null;
+	eventTrigger: Record<string,unknown> | null;
 	httpsTrigger: object | null;
 	schedule: string | null;
 	isCallableFunction: boolean;

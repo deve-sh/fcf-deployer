@@ -54,7 +54,7 @@
 			style={status.includes("Error")
 				? "background: red; color:white;"
 				: status.includes("Ongoing")
-				? "background: yellow; color: white;"
+				? "background: orangered; color: white;"
 				: "background: green; color:white;"}
 			chip={status}
 		>
@@ -64,14 +64,12 @@
 	<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.5rem;">
 		<b>Functions</b>: {functionsList.join(",")}
 	</div>
+	<b>Logs</b>:
 	{#if logs.length > 0}
-		<DataTable stickyHeader style="width:100%;">
-			<Head><Row><Cell>Log</Cell></Row></Head>
-			<Body>
-				{#each logs as log}
-					<Row><Cell>{@html log}</Cell></Row>
-				{/each}
-			</Body>
-		</DataTable>
+		<div style="background: #212121; padding: 1rem; border-radius: 0.25rem;">
+			{#each logs as log}
+				<div>{@html log}</div>
+			{/each}
+		</div>
 	{/if}
 </Paper>
