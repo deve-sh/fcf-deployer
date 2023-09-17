@@ -1,7 +1,7 @@
 {
-	"name": "cloud-functions-deployer-gui",
-	"version": "1.0.0",
-	"description": "A GUI to help you deploy your Firebase cloud functions",
+	"name": "fcf-deployer",
+	"version": "0.0.8",
+	"description": "A GUI to help you deploy your Firebase Cloud Functions when working locally",
 	"scripts": {
 		"dev:client": "cd ./client && npm run dev",
 		"dev:server": "tsup --watch --onSuccess \"node dist/server.js\"",
