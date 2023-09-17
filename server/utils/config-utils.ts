@@ -54,7 +54,7 @@ export const getFirebaseFunctionsBuildCommand = () => {
 	try {
 		const packageJSON = JSON.parse(fs.readFileSync(packageJSONFile, "utf-8"));
 		if (packageJSON && packageJSON.scripts && packageJSON.scripts.build)
-			return packageJSON.functions.build;
+			return packageJSON.scripts.build;
 		return null;
 	} catch (error) {
 		console.warn("There is a problem with your package.json file", error);
