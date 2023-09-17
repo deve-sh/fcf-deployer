@@ -30,7 +30,8 @@
 				window.alert(data.error);
 				return goto("/");
 			} else {
-				functionsList = data.functionsList || [];
+				if (data.functionsList && data.functionsList.length)
+					functionsList = data.functionsList;
 				status = data.status
 					? data.status.toUpperCase().slice(0, 1) + data.status.slice(1)
 					: "Ongoing";
