@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "A GUI to help you deploy your Firebase cloud functions",
 	"scripts": {
+		"dev:client": "cd ./client && npm run dev",
 		"dev:server": "tsup --watch --onSuccess \"node dist/server.js\"",
 		"compile:server": "tsup",
 		"pre-publish": "npm run compile:server && node scripts/pre-publish",

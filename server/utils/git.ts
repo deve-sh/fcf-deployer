@@ -11,7 +11,11 @@ export const isGitRepo = (): Promise<boolean> =>
 export const getGitBranches = (): Promise<string[]> =>
 	new Promise((resolve) =>
 		exec("git branch --list", (error, stdout) => {
-			const branches = stdout.replace(/\* /g, "").split("\n").filter(Boolean);
+			const branches = stdout
+				.replace(/\* /g, "")
+				.split("\n")
+				.filter(Boolean)
+				.map((branchName) => branchName.trim());
 			if (error) return resolve([]);
 			return resolve(branches);
 		})

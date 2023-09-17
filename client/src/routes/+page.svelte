@@ -23,8 +23,10 @@
 
 	let isInGitRepo: boolean;
 	let gitBranches: string[] = [];
-	let cloudFunctions: CloudFunction[] = [];
 	let activeBranch: string | null = null;
+	let previousBranchName: string | null = activeBranch;
+
+	let cloudFunctions: CloudFunction[] = [];
 	let environments: string[] = [];
 	let deploymentEnvironment: string = "";
 	let selectedFunctionsForDeployment: Set<string> = new Set();
@@ -40,6 +42,7 @@
 				listBranches(),
 				getActiveBranch(),
 			]);
+			previousBranchName = activeBranch;
 		}
 	});
 
@@ -57,13 +60,15 @@
 	// WTF is this syntax Svelte? - Also how would you handle for errors in case the branch switch call from the backend fails and set the select dropdown back to the correct value?!
 	$: activeBranch,
 		(async () => {
-			if (activeBranch) {
+			if (activeBranch && activeBranch !== previousBranchName) {
 				const successfulChange = await switchBranch(activeBranch);
 				if (!successfulChange) {
+					activeBranch = previousBranchName;
 					return window.alert(
-						"Branch change was not successful. Check if you have any staged/un-committed files. Please set the branch dropdown to the correct option."
+						"Branch change was not successful. Check if you have any staged/un-committed files."
 					);
 				}
+				previousBranchName = activeBranch;
 				// Refetch cloud functions for branch just switched to
 				cloudFunctions = await listCloudFunctions();
 			}
@@ -93,13 +98,15 @@
 >
 	<div class="mdc-typography--headline2">Deploy Your Cloud Functions</div>
 	<header>
-		<div>
-			<Select bind:value={activeBranch} label="Branch">
-				{#each gitBranches as branch}
-					<Option value={branch}>{branch}</Option>
-				{/each}
-			</Select>
-		</div>
+		{#if isInGitRepo}
+			<div>
+				<Select bind:value={activeBranch} label="Branch">
+					{#each gitBranches as branch}
+						<Option value={branch}>{branch}</Option>
+					{/each}
+				</Select>
+			</div>
+		{/if}
 		<div>
 			<Select
 				bind:value={deploymentEnvironment}
@@ -123,6 +130,7 @@
 						<Cell>Deploy?</Cell>
 						<Cell>Function</Cell>
 						<Cell>Regions</Cell>
+						<Cell>Memory Limit</Cell>
 						<Cell>Trigger</Cell>
 						<Cell>Min/Max Instances</Cell>
 						<Cell>Timeout</Cell>
@@ -141,6 +149,10 @@
 								>{func.name}</Cell
 							>
 							<Cell>{func.regions.join(", ")}</Cell>
+							<Cell
+								>{func.availableMemoryMb}
+								{func.availableMemoryMb !== "-" ? "MB" : ""}
+							</Cell>
 							<Cell>{func.triggerType}</Cell>
 							<Cell>{func.minInstances}/{func.maxInstances}</Cell>
 							<Cell>{func.timeout}</Cell>
