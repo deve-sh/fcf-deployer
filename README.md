@@ -72,3 +72,16 @@ So in this case you have two options:
 
 - Use the `predeploy` config in your `firebase.json`'s `functions` property.
 - Use the `prerunScript` property to specify a command that you want to run at the start time, this would ensure what you need before your Firebase Cloud Functions deploy are run.
+
+## Issues and Bugs
+
+[![File An issue](https://img.shields.io/badge/fcf%20deployer-file%20an%20issue-orangered)](https://github.com/deve-sh/fcf-deployer/issues/new)
+
+### Development Instructions
+
+- You can run the server with `npm run dev:server` (Express with Server-Sent events for real-time deployment updates)
+- You can run the client with `npm run dev:client` (Svelte + Vite)
+
+On production, the client is compiled to static assets and served in the home route by the backend. 
+
+When the user runs the `npx open-functions-deployer` command the compiled server file is loaded, it runs the startup script and establishes an API for the client to work with to get information about context and APIs the browser does not have access to, like whether the user is in a Git Repo, running command line operations and switching Firebase environments.
