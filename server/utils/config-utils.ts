@@ -14,7 +14,7 @@ export const getCommandLineArgs = () => {
 	return argv;
 };
 
-const CONFIG_FILE_NAME = "./functions-deployer-gui.config.json";
+const CONFIG_FILE_NAME = "./fcf-deployer.config.json";
 export const parseConfigFile = () => {
 	const configFilePath = path.resolve(process.cwd(), CONFIG_FILE_NAME);
 	if (fs.existsSync(configFilePath)) {
