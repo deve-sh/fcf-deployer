@@ -11,9 +11,8 @@
 
 	import Paper from "@smui/paper";
 	import Chip, { Text as ChipText } from "@smui/chips";
-	import DataTable, { Row, Head, Cell, Body } from "@smui/data-table";
 
-	let logs: string[] = [];
+	let logs: Set<string> = new Set();
 	let functionsList: string[] = [];
 	let status: string = "Ongoing";
 
@@ -31,11 +30,11 @@
 				return goto("/");
 			} else {
 				functionsList = data.functionsList || [];
-				status = data.status.toUpperCase().slice(0, 1) + data.status.slice(1);
-				logs = [
-					...logs,
-					...data.logs.map((log: string) => colourCodeConverter.toHtml(log)),
-				];
+				status = data.status
+					? data.status.toUpperCase().slice(0, 1) + data.status.slice(1)
+					: "Ongoing";
+				for (const log of data.logs || [])
+					logs = logs.add(colourCodeConverter.toHtml(log));
 			}
 		};
 	});
@@ -65,11 +64,9 @@
 		<b>Functions</b>: {functionsList.join(",")}
 	</div>
 	<b>Logs</b>:
-	{#if logs.length > 0}
-		<div style="background: #212121; padding: 1rem; border-radius: 0.25rem;">
-			{#each logs as log}
-				<div>{@html log}</div>
-			{/each}
-		</div>
-	{/if}
+	<div style="background: #212121; padding: 1rem; border-radius: 0.25rem;">
+		{#each Array.from(logs) as log}
+			<div>{@html log}</div>
+		{/each}
+	</div>
 </Paper>

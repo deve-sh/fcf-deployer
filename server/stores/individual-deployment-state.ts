@@ -3,7 +3,7 @@ import { spawn, execSync } from "node:child_process";
 type ChangeListener = (deploymentState: IndividualDeploymentState) => unknown;
 
 class IndividualDeploymentState {
-	id: string = '';
+	id: string = "";
 	functionsList: string[] = [];
 	logs: string[] = [];
 	status: "ongoing" | "completed" | "errorred";
@@ -42,7 +42,9 @@ class IndividualDeploymentState {
 		const logString = data.toString().trim();
 		if (logString.length) {
 			console.log(logString);
-			this.logs.push(logString);
+			this.logs.push(
+				`\x1b[36m${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}\x1b[0m: ${logString}`
+			);
 			this.notifyListeners();
 		}
 	};
