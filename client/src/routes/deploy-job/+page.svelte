@@ -42,6 +42,9 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Firebase Cloud Functions - Deploy Job {jobId}</title>
+</svelte:head>
 <Paper
 	style="max-width: 80%;margin: 0 auto;padding: 2rem;"
 	elevation={3}

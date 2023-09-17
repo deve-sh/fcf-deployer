@@ -1,6 +1,6 @@
 {
 	"name": "fcf-deployer",
-	"version": "0.0.94",
+	"version": "0.0.95",
 	"description": "A GUI to help you deploy your Firebase Cloud Functions when working locally",
 	"scripts": {
 		"dev:client": "cd ./client && npm run dev",
