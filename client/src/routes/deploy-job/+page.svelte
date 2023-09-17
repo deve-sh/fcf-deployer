@@ -66,7 +66,9 @@
 		<b>Functions</b>: {functionsList.join(",")}
 	</div>
 	<b>Logs</b>:
-	<div style="background: #212121; padding: 1rem; border-radius: 0.25rem;">
+	<div
+		style="background: #212121; padding: 1rem; color: #FFFFFF; border-radius: 0.25rem;"
+	>
 		{#each Array.from(logs) as log}
 			<div>{@html log}</div>
 		{/each}
